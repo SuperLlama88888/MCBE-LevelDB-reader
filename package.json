@@ -1,0 +1,8 @@
+{
+  "name": "mcbe-leveldb-reader",
+  "description": "Reads a MCBE LevelDB database from a .zip file. Powered by Mojang's code from Mojang/minecraft-creator-tools.",
+  "dependencies": {
+    "@zip.js/zip.js": "^2.7.57",
+    "nbtify": "^2.2.0"
+  }
+}
