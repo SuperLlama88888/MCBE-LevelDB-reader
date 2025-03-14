@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import LevelDb from "./LevelDb.js";
 import * as NBT from "nbtify";
 import { BlobReader, ZipReader, Uint8ArrayWriter } from "@zip.js/zip.js";
-/** Extracts all LevelDB keys from a zipped .mcworld file. Also accepts the zipped "db" folder. */
+/** Extracts all LevelDB keys from a zipped `.mcworld` file. Also accepts the zipped "db" folder. */
 export function readMcworld(mcworld) {
     return __awaiter(this, void 0, void 0, function* () {
         let folder = new ZipReader(new BlobReader(mcworld));

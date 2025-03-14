@@ -6,12 +6,15 @@
     "nbtify": "^2.2.0"
   },
   "scripts": {
-    "build": "tsc && copy LevelDb.js dist/LevelDb.js"
+    "build": "tsc"
   },
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "main": "dist/main.js",
+  "types": "./types.d.ts",
   "exports": {
-    "import": "./main.ts"
+    "import": "./dist/main.js",
+    "types": "./types.d.ts"
   },
   "repository": {
     "type": "git",
