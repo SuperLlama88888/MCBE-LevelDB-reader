@@ -6,16 +6,17 @@
     "nbtify": "^2.2.0"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && copy types.d.ts dist\\types.d.ts"
   },
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/main.js",
-  "types": "./types.d.ts",
+  "types": "dist/main.d.ts",
   "exports": {
     "import": "./dist/main.js",
-    "types": "./types.d.ts"
+    "types": "./dist/main.d.ts"
   },
+  "files": ["dist/"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SuperLlama88888/MCBE-LevelDB-reader.git"
