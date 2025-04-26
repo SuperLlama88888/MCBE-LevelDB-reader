@@ -48,3 +48,25 @@ export interface TickQueueData {
 	/** Number of ticks remaining before update. */
 	tick_delay: Number;
 }
+
+export declare class LevelKeyValue {
+	fileBytes: Uint8Array | undefined;
+	startIndex: number | undefined;
+	
+	unsharedKeyBytes: Uint8Array | undefined;
+	keyDelta: string | undefined;
+	value: Uint8Array | undefined;
+	sharedKey: string | undefined;
+	sharedByteLength: number | undefined;
+	length: number | undefined;
+	previousKey: LevelKeyValue | undefined;
+	keyCached: string | undefined;
+	fullBytesCached: Uint8Array | undefined;
+	
+	get unsharedKey(): string | undefined;
+	get key(): string;
+	get keyBytes(): Uint8Array | undefined;
+	get isRestart(): boolean;
+	
+	loadFromLdb(incomingBytes: Uint8Array, startingIndex: number, prevKey: LevelKeyValue | undefined): void;
+}

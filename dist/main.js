@@ -16,8 +16,12 @@ export function readMcworld(mcworld) {
         let folder = new ZipReader(new BlobReader(mcworld));
         let fileEntries = yield folder.getEntries();
         folder.close();
-        let inWorldFolder = fileEntries.some(entry => entry.filename == "levelname.txt");
-        let dbEntries = inWorldFolder ? fileEntries.filter(entry => entry.filename.startsWith("db/")) : fileEntries;
+        let currentEntry = fileEntries.find(entry => zipEntryBasename(entry) == "CURRENT");
+        if (!currentEntry) {
+            throw new Error("Cannot find LevelDB files!");
+        }
+        let dbRootPath = zipEntryDirname(currentEntry);
+        let dbEntries = fileEntries.filter(entry => !entry.directory && entry.filename.startsWith(dbRootPath));
         let dbFiles = yield Promise.all(dbEntries.map(entry => zipEntryToFile(entry)));
         return yield readLevelDb(dbFiles);
     });
@@ -25,8 +29,15 @@ export function readMcworld(mcworld) {
 /** Converts an Entry from zip.js into a File. */
 export function zipEntryToFile(entry) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new File([yield entry.getData(new Uint8ArrayWriter())], entry.filename.slice(entry.filename.lastIndexOf("/") + 1));
+        return new File([yield entry.getData(new Uint8ArrayWriter())], zipEntryBasename(entry));
     });
+}
+/** Finds the basename of an Entry from zip.js. */
+export function zipEntryBasename(entry) {
+    return entry.filename.slice(entry.filename.lastIndexOf("/") + 1);
+}
+export function zipEntryDirname(entry) {
+    return entry.filename.includes("/") ? entry.filename.slice(0, entry.filename.lastIndexOf("/") + 1) : "";
 }
 /** Reads a LevelDB database from all its files and returns an object with all keys. */
 export function readLevelDb(dbFiles) {
@@ -70,21 +81,35 @@ export function readLevelDb(dbFiles) {
     });
 }
 /** Extracts structure files from a `.mcworld` file. */
-export function extractStructureFilesFromMcworld(mcworld) {
-    return __awaiter(this, void 0, void 0, function* () {
+export function extractStructureFilesFromMcworld(mcworld_1) {
+    return __awaiter(this, arguments, void 0, function* (mcworld, removeDefaultNamespace = true) {
         let levelDbKeys = yield readMcworld(mcworld);
         let structures = new Map();
-        yield Promise.all(Object.entries(levelDbKeys).map((_a) => __awaiter(this, [_a], void 0, function* ([key, value]) {
+        const structureKeyPrefix = "structuretemplate_";
+        const defaultNamespace = "mystructure:";
+        Object.entries(levelDbKeys).forEach(([key, value]) => {
             let strKey = key.toString();
-            if (strKey.startsWith("structuretemplate_")) {
-                let structureName = strKey.replace(/^structuretemplate_/, "");
-                try {
-                    let structure = (yield NBT.read(value.value)).data;
-                    structures.set(structureName, structure);
-                }
-                catch (e) {
-                    console.error(`Failed reading structure NBT for ${structureName}: ${e}`);
-                }
+            if (strKey.startsWith(structureKeyPrefix)) {
+                let namespacedStructureName = strKey.slice(structureKeyPrefix.length);
+                let structureName = removeDefaultNamespace && namespacedStructureName.startsWith(defaultNamespace) ? namespacedStructureName.replace(defaultNamespace, "") : namespacedStructureName;
+                structures.set(structureName, new File([value.value], structureName.replaceAll(":", "_") + ".mcstructure"));
+            }
+        });
+        return structures;
+    });
+}
+/** Extracts structures from a `.mcworld` file. */
+export function extractStructuresFromMcworld(mcworld_1) {
+    return __awaiter(this, arguments, void 0, function* (mcworld, removeDefaultNamespace = true) {
+        let structureFiles = yield extractStructureFilesFromMcworld(mcworld, removeDefaultNamespace);
+        let structures = new Map();
+        yield Promise.all([...structureFiles].map((_a) => __awaiter(this, [_a], void 0, function* ([structureName, structureFile]) {
+            try {
+                let structure = (yield NBT.read(structureFile)).data;
+                structures.set(structureName, structure);
+            }
+            catch (e) {
+                console.error(`Failed reading structure NBT for ${structureName}: ${e}`);
             }
         })));
         return structures;

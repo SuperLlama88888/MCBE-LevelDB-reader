@@ -3,7 +3,7 @@
 		"target": "ES6",
 		"module": "NodeNext",
 		"sourceMap": true,
-		"lib": ["ES2020", "DOM"],
+		"lib": ["ES2021", "DOM"],
 		"outDir": "dist",
 		"moduleResolution": "nodenext",
 		"declaration": true
