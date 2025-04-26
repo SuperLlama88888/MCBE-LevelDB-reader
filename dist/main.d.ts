@@ -6,6 +6,7 @@ export declare function readMcworld(mcworld: Blob): Promise<Record<string, Level
 export declare function zipEntryToFile(entry: Entry): Promise<File>;
 /** Finds the basename of an Entry from zip.js. */
 export declare function zipEntryBasename(entry: Entry): string;
+/** Finds the directory name of an Entry from zip.js. */
 export declare function zipEntryDirname(entry: Entry): string;
 /** Reads a LevelDB database from all its files and returns an object with all keys. */
 export declare function readLevelDb(dbFiles: Array<File>): Promise<Record<string, LevelKeyValue>>;

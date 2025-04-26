@@ -9,7 +9,7 @@
     "build": "tsc && copy types.d.ts dist\\types.d.ts && copy LevelDb.js dist\\LevelDb.js"
   },
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "exports": {

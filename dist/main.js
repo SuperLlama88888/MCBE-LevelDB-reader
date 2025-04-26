@@ -36,6 +36,7 @@ export function zipEntryToFile(entry) {
 export function zipEntryBasename(entry) {
     return entry.filename.slice(entry.filename.lastIndexOf("/") + 1);
 }
+/** Finds the directory name of an Entry from zip.js. */
 export function zipEntryDirname(entry) {
     return entry.filename.includes("/") ? entry.filename.slice(0, entry.filename.lastIndexOf("/") + 1) : "";
 }
