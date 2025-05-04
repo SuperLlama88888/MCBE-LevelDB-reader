@@ -45,7 +45,7 @@ export function readLevelDb(dbFiles) {
     return __awaiter(this, void 0, void 0, function* () {
         let files = yield Promise.all(dbFiles.map((file) => __awaiter(this, void 0, void 0, function* () {
             let iFile = {
-                content: yield file.bytes(),
+                content: new Uint8Array(yield file.arrayBuffer()),
                 loadContent: () => new Date(),
                 name: file.name,
                 storageRelativePath: file.name,

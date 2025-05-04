@@ -35,7 +35,7 @@ export function zipEntryDirname(entry: Entry): string {
 export async function readLevelDb(dbFiles: Array<File>): Promise<Record<string, LevelKeyValue>> {
 	let files = await Promise.all(dbFiles.map(async file => {
 		let iFile = {
-			content: await file.bytes(),
+			content: new Uint8Array(await file.arrayBuffer()),
 			loadContent: () => new Date(),
 			name: file.name,
 			storageRelativePath: file.name,
