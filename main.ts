@@ -1,7 +1,6 @@
 import LevelDb from "./LevelDb.js";
-import * as NBT from "nbtify";
 import { BlobReader, ZipReader, Uint8ArrayWriter, Entry } from "@zip.js/zip.js";
-import { Structure, LevelKeyValue } from "./types.js";
+import { LevelKeyValue } from "./types.js";
 
 /** Extracts all LevelDB keys from a zipped `.mcworld` file. Also accepts the zipped "db" folder. */
 export async function readMcworld(mcworld: Blob): Promise<Record<string, LevelKeyValue>> {
@@ -84,19 +83,5 @@ export async function extractStructureFilesFromMcworld(mcworld: Blob, removeDefa
 			structures.set(structureName, new File([value.value], structureName.replaceAll(":", "_") + ".mcstructure"));
 		}
 	});
-	return structures;
-}
-/** Extracts structures from a `.mcworld` file. */
-export async function extractStructuresFromMcworld(mcworld: Blob, removeDefaultNamespace: boolean = true): Promise<Map<string, Structure>> {
-	let structureFiles = await extractStructureFilesFromMcworld(mcworld, removeDefaultNamespace);
-	let structures = new Map();
-	await Promise.all([...structureFiles].map(async ([structureName, structureFile]) => {
-		try {
-			let structure = (await NBT.read(structureFile)).data;
-			structures.set(structureName, structure);
-		} catch(e) {
-			console.error(`Failed reading structure NBT for ${structureName}: ${e}`);
-		}
-	}));
 	return structures;
 }

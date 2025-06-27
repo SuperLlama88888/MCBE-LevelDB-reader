@@ -1,5 +1,5 @@
 import { Entry } from "@zip.js/zip.js";
-import { Structure, LevelKeyValue } from "./types.js";
+import { LevelKeyValue } from "./types.js";
 /** Extracts all LevelDB keys from a zipped `.mcworld` file. Also accepts the zipped "db" folder. */
 export declare function readMcworld(mcworld: Blob): Promise<Record<string, LevelKeyValue>>;
 /** Converts an Entry from zip.js into a File. */
@@ -12,5 +12,3 @@ export declare function zipEntryDirname(entry: Entry): string;
 export declare function readLevelDb(dbFiles: Array<File>): Promise<Record<string, LevelKeyValue>>;
 /** Extracts structure files from a `.mcworld` file. */
 export declare function extractStructureFilesFromMcworld(mcworld: Blob, removeDefaultNamespace?: boolean): Promise<Map<string, File>>;
-/** Extracts structures from a `.mcworld` file. */
-export declare function extractStructuresFromMcworld(mcworld: Blob, removeDefaultNamespace?: boolean): Promise<Map<string, Structure>>;

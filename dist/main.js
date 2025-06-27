@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import LevelDb from "./LevelDb.js";
-import * as NBT from "nbtify";
 import { BlobReader, ZipReader, Uint8ArrayWriter } from "@zip.js/zip.js";
 /** Extracts all LevelDB keys from a zipped `.mcworld` file. Also accepts the zipped "db" folder. */
 export function readMcworld(mcworld) {
@@ -96,23 +95,6 @@ export function extractStructureFilesFromMcworld(mcworld_1) {
                 structures.set(structureName, new File([value.value], structureName.replaceAll(":", "_") + ".mcstructure"));
             }
         });
-        return structures;
-    });
-}
-/** Extracts structures from a `.mcworld` file. */
-export function extractStructuresFromMcworld(mcworld_1) {
-    return __awaiter(this, arguments, void 0, function* (mcworld, removeDefaultNamespace = true) {
-        let structureFiles = yield extractStructureFilesFromMcworld(mcworld, removeDefaultNamespace);
-        let structures = new Map();
-        yield Promise.all([...structureFiles].map((_a) => __awaiter(this, [_a], void 0, function* ([structureName, structureFile]) {
-            try {
-                let structure = (yield NBT.read(structureFile)).data;
-                structures.set(structureName, structure);
-            }
-            catch (e) {
-                console.error(`Failed reading structure NBT for ${structureName}: ${e}`);
-            }
-        })));
         return structures;
     });
 }
